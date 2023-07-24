@@ -14,11 +14,7 @@ public class CustomerService {
     @Autowired
     CustomerRepository customerRepository;
     public CustomerResponseDTO addCustomer(CustomerRequestDTO customerRequestDTO) {
-//        Customer customer = new Customer();
-//        customer.setName(customerRequestDTO.getName());
-//        customer.setEmailId(customerRequestDTO.getEmailId());
-//        customer.setMobileNo(customerRequestDTO.getMobileNo());
-//        customer.setGender(customerRequestDTO.getGender());
+
         Customer customer= CustomerTransformer.customerRequestDTOToCustomer(customerRequestDTO);
 
         Cart cart = new Cart();

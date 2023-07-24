@@ -26,7 +26,7 @@ public class Customer {
     String emailId;
 
     @Column(unique = true)
-    String mobileNo;
+    String mobNo;
     @Enumerated(value = EnumType.STRING)
     Gender gender;
 

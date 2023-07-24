@@ -28,7 +28,7 @@ public class ItemService {
 
         Customer customer = customerRepository.findByEmailId(itemRequestDto.getCustomerEmail());
         if(customer==null){
-            throw new CustomerNotFoundException("Customer doesn't exisit");
+            throw new CustomerNotFoundException("Customer doesn't exist");
         }
 
         Optional<Product> productOptional = productRepository.findById(itemRequestDto.getProductId());
@@ -38,12 +38,12 @@ public class ItemService {
 
         Product product = productOptional.get();
 
-        // check for required quantity
+
         if(product.getAvailableQuantity()< itemRequestDto.getRequiredQuantity()){
-            throw new InsufficientQuantityException("Sorry! Required quantity not avaiable");
+            throw new InsufficientQuantityException("Sorry! Required quantity not available");
         }
 
-        // create item
+
         Item item = ItemTransformer.ItemRequestDtoToItem(itemRequestDto.getRequiredQuantity());
         return item;
     }

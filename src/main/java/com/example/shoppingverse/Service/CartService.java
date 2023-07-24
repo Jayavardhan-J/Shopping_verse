@@ -50,14 +50,14 @@ public class CartService {
 
         item.setCart(cart);
         item.setProduct(product);
-        Item savedItem = itemRepository.save(item);  // to avoid duplicacy
+        Item savedItem = itemRepository.save(item);
 
         cart.getItemList().add(savedItem);
         product.getItemList().add(savedItem);
         Cart savedCart = cartRepository.save(cart);
         productRepository.save(product);
 
-        //prepare cartResponse Dto
+
         return CartTransformer.CartToCartReponseDto(savedCart);
 
     }
@@ -85,7 +85,7 @@ public class CartService {
 
         OrderEntity savedOrder = orderEntityRepository.save(order);
 
-        // prepare response dto
+
         return OrderTransformer.OrderToOrderResponseDto(savedOrder);
     }
 

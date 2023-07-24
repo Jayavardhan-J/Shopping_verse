@@ -15,8 +15,7 @@ import java.util.List;
 
 @Service
 public class CardService {
-    @Autowired
-    CardRepository cardRepository;
+
     @Autowired
     CustomerRepository customerRepository;
     public CardResponseDTO addCard(CardRequestDTO cardRequestDTO) {

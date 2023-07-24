@@ -12,6 +12,9 @@ import com.example.shoppingverse.Respository.*;
 import com.example.shoppingverse.Transformer.ItemTransformer;
 import com.example.shoppingverse.Transformer.OrderTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -40,12 +43,14 @@ public class OrderService {
     private ItemRepository itemRepository;
     @Autowired
     private CartRepository cartRepository;
+    @Autowired
+    JavaMailSender mailSender;
 
     public OrderResponseDto placeOrder(OrderRequestDto orderRequestDto) {
 
         Customer customer = customerRepository.findByEmailId(orderRequestDto.getCustomerEmail());
         if(customer==null){
-            throw new CustomerNotFoundException("Customer Doesn't exisit");
+            throw new CustomerNotFoundException("Customer Doesn't exist");
         }
 
         Optional<Product> productOptional = productRepository.findById(orderRequestDto.getProductId());
@@ -61,7 +66,7 @@ public class OrderService {
 
         Product product = productOptional.get();
         if(product.getAvailableQuantity() < orderRequestDto.getRequiredQuantity()){
-            throw new InsufficientQuantityException("Insufficient QUantity available");
+            throw new InsufficientQuantityException("Insufficient Quantity available");
         }
 
         int newQuantity = product.getAvailableQuantity()- orderRequestDto.getRequiredQuantity();
@@ -70,7 +75,7 @@ public class OrderService {
             product.setProductStatus(ProductStatus.OUT_OF_STOCK);
         }
 
-        // prepare Order entity
+
         OrderEntity orderEntity = new OrderEntity();
         orderEntity.setOrderId(String.valueOf(UUID.randomUUID()));
         orderEntity.setCardUsed(cardService.generateMaskedCard(orderRequestDto.getCardUsed()));
@@ -83,15 +88,12 @@ public class OrderService {
         orderEntity.setCustomer(customer);
         orderEntity.getItemList().add(item);
 
-        OrderEntity savedOrder = orderEntityRepository.save(orderEntity);  // save order and item
+        OrderEntity savedOrder = orderEntityRepository.save(orderEntity);
 
         product.getItemList().add(savedOrder.getItemList().get(0));
         customer.getOrders().add(savedOrder);
 
-//        productRepository.save(product);
-//        customerRepository.save(customer);
-
-        // preapre response Dto
+        sendEmail(savedOrder);
         return OrderTransformer.OrderToOrderResponseDto(savedOrder);
     }
 
@@ -124,5 +126,17 @@ public class OrderService {
         order.setCustomer(card.getCustomer());
 
         return order;
+    }
+    public void sendEmail(OrderEntity orderEntity){
+        String text= "Congrats! Your order has been placed.'\n' "+
+                "Order id : " + orderEntity.getOrderId()+'\n'+
+                "Order total : "+orderEntity.getOrderTotal()+'\n'+
+                "Order date : " +orderEntity.getOrderDate()+'\n';
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setTo(orderEntity.getCustomer().getEmailId());
+        mail.setFrom("shoppingverse1920@gmail.com");
+        mail.setSubject("Order Placed");
+        mail.setText(text);
+        mailSender.send(mail);
     }
 }

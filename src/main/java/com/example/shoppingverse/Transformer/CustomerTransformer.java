@@ -11,13 +11,13 @@ public class CustomerTransformer {
         return Customer.builder().Name(customerRequestDTO.getName())
                 .gender(customerRequestDTO.getGender())
                 .emailId(customerRequestDTO.getEmailId())
-                .mobileNo(customerRequestDTO.getMobileNo()).build();
+                .mobNo(customerRequestDTO.getMobileNo()).build();
 
     }
     public static CustomerResponseDTO customerToCustomerResponseDTO(Customer customer){
         return CustomerResponseDTO.builder().name(customer.getName())
                 .emailId(customer.getEmailId())
-                .mobileNo(customer.getMobileNo())
+                .mobileNo(customer.getMobNo())
                 .gender(customer.getGender())
                 .build();
 
