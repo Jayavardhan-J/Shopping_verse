@@ -42,4 +42,9 @@ public class ProductService {
         for(Product product:productList)productResponseDTOS.add(ProductTransformer.productToProductResponseDto(product));
         return productResponseDTOS;
     }
+
+    public List<Product> getProductsByLowestValue(ProductCategory productCategory) {
+        List<Product> topLow=productRepository.getProductsByLowestValue(productCategory);
+        return topLow;
+    }
 }

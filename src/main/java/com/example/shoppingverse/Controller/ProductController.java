@@ -4,6 +4,7 @@ import com.example.shoppingverse.DTO.RequestDTO.ProductRequestDTO;
 import com.example.shoppingverse.DTO.ResponseDTO.ProductResponseDTO;
 import com.example.shoppingverse.Enum.ProductCategory;
 import com.example.shoppingverse.Exception.SellerNotFoundException;
+import com.example.shoppingverse.Model.Product;
 import com.example.shoppingverse.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,5 +32,9 @@ public class ProductController {
     public ResponseEntity getProdByCategoryAndPriceGreaterThan(@RequestParam("category") ProductCategory category, @RequestParam("price") int price){
         List<ProductResponseDTO> productResponseDTOS = productService.getProdByCategoryAndPriceGreaterThan(price,category);
         return new ResponseEntity(productResponseDTOS,HttpStatus.FOUND);
+    }
+    @GetMapping("/get_products_by_lowest_value")
+    public List<Product> getProductsByLowestValue(@RequestParam ProductCategory productCategory){
+        return productService.getProductsByLowestValue(productCategory);
     }
 }

@@ -12,4 +12,8 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product,Integer> {
     @Query("select p from Product p where p.price >= :price and p.category = :category")
     public List<Product> getProdByCategoryAndPriceGreaterThan(int price, ProductCategory category);
+
+    // value = " select * from product where category=:category order by price limit 5",nativeQuery = true
+    @Query("select p from Product p where p.category =:category order by p.price")
+    List<Product> getProductsByLowestValue(ProductCategory category);
 }
